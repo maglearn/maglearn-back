@@ -1,0 +1,4 @@
+include maglearn_back/schema.sql
+graft maglearn_back/static
+graft maglearn_back/templates
+global-exclude *.pyc
