@@ -11,6 +11,8 @@ pytest = "*"
 coverage = "*"
 flask-sqlalchemy = "*"
 flask-admin = "*"
+graphene = "*"
+flask-graphql = "*"
 
 [requires]
 python_version = "3.7"

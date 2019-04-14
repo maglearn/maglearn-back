@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_graphql import GraphQLView
 
 from .admin import admin
 from .database import db
@@ -37,5 +38,15 @@ def create_app(test_config=None):
     from . import blog
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
+
+    from . import schema
+    app.add_url_rule(
+        '/graphql',
+        view_func=GraphQLView.as_view(
+            'graphql',
+            schema=schema.schema,
+            graphiql=True
+        )
+    )
 
     return app
