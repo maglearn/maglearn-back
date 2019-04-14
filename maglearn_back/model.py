@@ -30,3 +30,36 @@ class Dataset(db.Model):
 class NetworkArchitectureDefinition(db.Model):
     type = db.Column(db.String, nullable=False)
     definition = db.Column(db.JSON, nullable=False)
+
+
+class ExperimentDefinition(db.Model):
+    backend = db.Column(db.String, nullable=False)
+    reduction_algorithm = db.Column(db.String, nullable=False)
+    metaparameters = db.Column(db.JSON)
+
+    dataset_id = db.Column(db.Integer, db.ForeignKey('dataset.id'))
+    dataset = db.relationship('Dataset')
+    arch_definition_id = db.Column(db.Integer,
+                                   db.ForeignKey(NetworkArchitectureDefinition.id))
+    arch_definition = db.relationship('NetworkArchitectureDefinition')
+
+
+class ExperimentJob(db.Model):
+    start_date = db.Column(db.TIMESTAMP)
+    end_date = db.Column(db.TIMESTAMP)
+
+    definition_id = db.Column(db.Integer,
+                              db.ForeignKey(ExperimentDefinition.id))
+    definition = db.relationship('ExperimentDefinition')
+    result = db.relationship('ExperimentResult', uselist=False,
+                             back_populates='job')
+
+
+class ExperimentResult(db.Model):
+    execution_time = db.Column(db.Integer, nullable=False)
+    training_history = db.Column(db.JSON, nullable=False)
+
+    job_id = db.Column(db.Integer, db.ForeignKey(ExperimentJob.id),
+                       unique=True)
+    job = db.relationship('ExperimentJob', back_populates='result')
+
