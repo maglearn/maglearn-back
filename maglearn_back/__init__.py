@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_graphql import GraphQLView
 
+from maglearn_back import model
 from .admin import admin
 from .database import db
 
@@ -31,6 +32,8 @@ def create_app(test_config=None):
     database.init_app(app)
 
     admin.init_app(app)
+
+    model.init_app(app)
 
     from . import auth
     app.register_blueprint(auth.bp)
