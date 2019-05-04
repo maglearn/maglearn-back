@@ -3,7 +3,8 @@ import os
 from flask import Flask
 from flask_graphql import GraphQLView
 
-from maglearn_back import model, tasks, admin, database, auth, blog, datasets
+from maglearn_back import model, admin, database, auth, blog, datasets
+from maglearn_back.tasks import celery, init_celery
 
 
 def create_app(test_config=None):
@@ -29,13 +30,19 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    for module in [admin, database, model, tasks]:
+    # Extensions
+    for module in [admin, database, model]:
         module.init_app(app)
 
+    # Blueprints
     for module in [auth, blog, datasets]:
         app.register_blueprint(module.bp)
     app.add_url_rule('/', endpoint='index')
 
+    # Celery
+    init_celery(celery, app)
+
+    # GraphQL
     from . import schema
     app.add_url_rule(
         '/graphql',

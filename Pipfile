@@ -14,6 +14,9 @@ flask-admin = "*"
 graphene = "*"
 flask-graphql = "*"
 numpy = "*"
+celery = "*"
+redis = "*"
+gevent = "*"
 
 [requires]
 python_version = "3.7"

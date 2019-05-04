@@ -1,11 +1,11 @@
 import math
 from flask import Blueprint, request
 
+from maglearn_back.tasks import celery
 from maglearn_back.database import db
 from maglearn_back.library.data_generation import generate_random_fun_samples, \
     DampedSineWave
 from maglearn_back.model import Dataset
-from maglearn_back.tasks import celery
 
 bp = Blueprint('datasets', __name__, url_prefix='/datasets')
 
@@ -13,7 +13,7 @@ bp = Blueprint('datasets', __name__, url_prefix='/datasets')
 @bp.route("/start_generation", methods=['POST'])
 def start_generation():
     """Starts dataset generation job with given parameters."""
-    if request.method=='POST':
+    if request.method == 'POST':
         result = generate.delay()
         print("Task scheduled. Waiting.")
         result.wait()
@@ -21,7 +21,7 @@ def start_generation():
     return "error"
 
 
-@celery.task()
+@celery.task
 def generate():
     """Generates new dataset."""
     dataset1_size = 150
@@ -34,3 +34,4 @@ def generate():
                        data=dataset1_data)
     db.session.add(dataset1)
     db.session.commit()
+    return True
