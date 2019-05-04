@@ -23,4 +23,6 @@ def _add_model_views(admin_):
 admin = Admin(None, 'maglearn-back', template_mode='bootstrap3')
 
 
-_add_model_views(admin)
+def init_app(app):
+    _add_model_views(admin)
+    admin.init_app(app)
