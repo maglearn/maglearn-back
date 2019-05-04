@@ -5,8 +5,10 @@ import math
 from flask.cli import with_appcontext
 
 from maglearn_back.database import db, init_db
+from maglearn_back.library.backend import Backend
 from maglearn_back.library.data_generation import generate_random_fun_samples,\
     DampedSineWave
+from maglearn_back.library.networks import NetworkType
 
 
 class User(db.Model):
@@ -34,12 +36,12 @@ class Dataset(db.Model):
 
 
 class NetworkArchitectureDefinition(db.Model):
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.Enum(NetworkType), nullable=False)
     definition = db.Column(db.JSON, nullable=False)
 
 
 class ExperimentDefinition(db.Model):
-    backend = db.Column(db.String, nullable=False)
+    backend = db.Column(db.Enum(Backend), nullable=False)
     reduction_algorithm = db.Column(db.String, nullable=False)
     meta_parameters = db.Column(db.JSON)
 
@@ -81,6 +83,19 @@ def populate_db():
                        source_function='exp(-lambda*x") * cos(omega *x * phi)',
                        data=dataset1_data)
     db.session.add(dataset1)
+
+    arch_defn1 = NetworkArchitectureDefinition(type=NetworkType.MLP,
+                                               definition={'input': 1,
+                                                           'output': 1,
+                                                           'hidden': [10, 10]})
+    db.session.add(arch_defn1)
+
+    experiment1 = ExperimentDefinition(backend=Backend.PYTORCH,
+                                       reduction_algorithm='NONE',
+                                       dataset=dataset1,
+                                       arch_definition=arch_defn1)
+    db.session.add(experiment1)
+
     db.session.commit()
 
 
