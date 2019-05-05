@@ -16,8 +16,14 @@ def _get_model_entities():
 
 
 def _add_model_views(admin_):
+
+    class MyModelView(ModelView):
+        column_formatters = {
+            'data': lambda v, c, m, n: f"{str(m.data)[:100]}..."
+        }
+
     for name, obj in _get_model_entities():
-        admin_.add_view(ModelView(obj, db.session))
+        admin_.add_view(MyModelView(obj, db.session))
 
 
 admin = Admin(None, 'maglearn-back', template_mode='bootstrap3')
