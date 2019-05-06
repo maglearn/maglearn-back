@@ -1,9 +1,10 @@
 import os
 
 from flask import Flask
+from flask_bootstrap import Bootstrap
 from flask_graphql import GraphQLView
 
-from maglearn_back import model, admin, database, auth, blog, datasets
+from maglearn_back import model, admin, database, auth, blog, datasets, schema
 from maglearn_back.tasks import celery, init_celery
 
 
@@ -16,9 +17,7 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI=f'sqlite:///{sqlite_path}',
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=True,
-        FLASK_ADMIN_SWATCH='flatly',
-        CELERY_BROKER_URL='redis://localhost:6379',
-        CELERY_RESULT_BACKEND='redis://localhost:6379'
+        FLASK_ADMIN_SWATCH='flatly'
     )
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -43,7 +42,6 @@ def create_app(test_config=None):
     init_celery(celery, app)
 
     # GraphQL
-    from . import schema
     app.add_url_rule(
         '/graphql',
         view_func=GraphQLView.as_view(
@@ -52,5 +50,8 @@ def create_app(test_config=None):
             graphiql=True
         )
     )
+
+    # Bootstrap
+    Bootstrap(app)
 
     return app
