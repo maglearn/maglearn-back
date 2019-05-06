@@ -33,10 +33,10 @@ def register():
                 (username, generate_password_hash(password),)
             )
             db.commit()
+            flash("Registration successful.", category='success')
             return redirect(url_for('auth.login'))
 
-        flash(error)
-
+        flash(error, category='danger')
     return render_template('auth/register.html')
 
 
@@ -59,8 +59,7 @@ def login():
             session['user_id'] = user['id']
             return redirect(url_for('index'))
 
-        flash(error)
-
+        flash(error, category='danger')
     return render_template('auth/login.html')
 
 
@@ -79,6 +78,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
+    flash("Logged out.", category='success')
     return redirect(url_for('index'))
 
 

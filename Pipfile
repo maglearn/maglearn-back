@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+watchdog = {git = "https://github.com/gorakhargosh/watchdog.git"}
 
 [packages]
 flask = "*"
@@ -17,6 +18,7 @@ numpy = "*"
 celery = "*"
 redis = "*"
 gevent = "*"
+bootstrap-flask = "*"
 
 [requires]
 python_version = "3.7"
