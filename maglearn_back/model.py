@@ -2,11 +2,12 @@ from datetime import datetime
 
 import click
 import math
+import petname
 from flask.cli import with_appcontext
 
 from maglearn_back.database import db, init_db
 from maglearn_back.library.backend import Backend
-from maglearn_back.library.data_generation import generate_random_fun_samples,\
+from maglearn_back.library.data_generation import generate_random_fun_samples, \
     DampedSineWave
 from maglearn_back.library.networks import NetworkType
 
@@ -28,11 +29,13 @@ class Post(db.Model):
 
 
 class Dataset(db.Model):
+    name = db.Column(db.String, nullable=False,
+                     default=lambda: petname.generate(3))
     input_size = db.Column(db.Integer, nullable=False)
     output_size = db.Column(db.Integer, nullable=False)
     size = db.Column(db.Integer, nullable=False)
     source_function = db.Column(db.String, nullable=False)
-    data = db.Column(db.JSON, nullable=False)
+    data = db.deferred(db.Column(db.JSON, nullable=False))
 
 
 class NetworkArchitectureDefinition(db.Model):

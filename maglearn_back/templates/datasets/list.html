@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block header -%}
+  <h2>{% block title %}Datasets{% endblock %}</h2>
+{%- endblock %}
+
+{% block content -%}
+  <table class="table table-striped table-borderless table-hover table-responsive">
+    <caption class="sr-only">List of Datasets</caption>
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Size</th>
+      <th scope="col">Function</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for dataset in  datasets %}
+      <tr>
+        <th scope="row">
+          {{ dataset.id }}
+        </th>
+        <td>
+          {{ dataset.name }}
+        </td>
+        <td>
+          {{ dataset.size }}
+        </td>
+        <td>
+          $${{ dataset.source_function }}$$
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <form name="new-dataset" id="new-dataset" method="post">
+    <label for="size">Size</label>
+    <input type="number" name="size" id="size" value="{{ request.form['size'] }}" required>
+    <input type="submit" value="Create">
+  </form>
+  <div class="progress">
+    <div></div>
+    <div>0%</div>
+    <div>...</div>
+    <div>&nbsp;</div>
+  </div>
+{%- endblock %}
+
+{% block scripts -%}
+  {{ super() }}
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function () {
+    $('#new-dataset').on('submit', function(e) {
+        e.preventDefault();
+         $.ajax({
+                type: 'post',
+                url: 'start_generation',
+                data: $('#new-dataset').serialize(),
+                success: function () {
+                 alert("Dataset queued for creation!");
+                }
+              });
+    });
+});
+  </script>
+{%- endblock %}

@@ -19,6 +19,8 @@ celery = "*"
 redis = "*"
 gevent = "*"
 bootstrap-flask = "*"
+petname = "*"
+flask-wtf = "*"
 
 [requires]
 python_version = "3.7"
