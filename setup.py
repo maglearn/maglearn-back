@@ -7,6 +7,6 @@ setup(
     include_package_date=True,
     zip_safe=False,
     install_requires=[
-        'flask', 'graphene', 'click', 'sqlalchemy', 'numpy', 'celery'
+        'flask', 'graphene', 'click', 'sqlalchemy', 'numpy', 'celery', 'petname'
     ],
 )

@@ -5,7 +5,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy, Model
-from sqlalchemy import Column, Integer, TIMESTAMP
+from sqlalchemy import Column, Integer, TIMESTAMP, Boolean
 
 
 class Base(Model):
@@ -13,6 +13,7 @@ class Base(Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     create_ts = Column(TIMESTAMP, default=datetime.now)
     update_ts = Column(TIMESTAMP, default=datetime.now, onupdate=datetime.now)
+    deleted = Column(Boolean, default=False)
 
     def __repr__(self):
         return f'<{type(self).__name__} #{self.id} >'

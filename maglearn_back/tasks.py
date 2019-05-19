@@ -1,14 +1,10 @@
 import click
 from celery import Celery
-from celery.bin import worker
-from celery.utils.log import LOG_LEVELS
 from flask.cli import with_appcontext
 
 from maglearn_back.celeryconfig import CeleryConfig
 
 celery = Celery(__name__, config_source=CeleryConfig)
-
-# TODO: consider alternative to Celery i.e. Dramatiq
 
 
 def init_celery(celery_, app):
@@ -25,17 +21,12 @@ def init_celery(celery_, app):
     app.cli.add_command(celery_worker_command)
 
 
-@click.command('celery-worker')
-@click.option('--loglevel', default='INFO', show_default=True,
-              type=click.Choice([l for l in LOG_LEVELS if isinstance(l, str)]),
-              help='Celery worker log level.')
+@click.command('celery-worker',
+               context_settings={"ignore_unknown_options": True})
+@click.argument('argv', nargs=-1)
 @with_appcontext
-def celery_worker_command(loglevel):
+def celery_worker_command(argv):
     """Command for running celery worker."""
-    click.echo("Starting Celery worker.")
-    options = {
-        'loglevel': loglevel,
-        'traceback': True,
-        'pool': 'gevent'
-    }
-    worker.worker(app=celery).run(**options)
+    args = ['celery', 'worker', '-A', 'maglearn_back', '-P', 'gevent', *argv]
+    click.echo(f"Starting Celery worker with arguments {args}.")
+    celery.start(argv=args)

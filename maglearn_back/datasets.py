@@ -1,5 +1,5 @@
 import math
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, jsonify
 
 from maglearn_back.database import db
 from maglearn_back.library.data_generation import generate_random_fun_samples, \

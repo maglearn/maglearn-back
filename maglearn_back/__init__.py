@@ -2,14 +2,18 @@ import os
 
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_cors import CORS
 from flask_graphql import GraphQLView
 
 from maglearn_back import model, admin, database, auth, blog, datasets, schema
+from maglearn_back.api import restplus
 from maglearn_back.tasks import celery, init_celery
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    # TODO: 12.05.2019 John - configure cors
+    CORS(app)
     sqlite_path = os.path.join(app.instance_path, 'maglearn-back.sqlite')
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -30,7 +34,7 @@ def create_app(test_config=None):
         pass
 
     # Extensions
-    for module in [admin, database, model]:
+    for module in [admin, database, model, restplus]:
         module.init_app(app)
 
     # Blueprints

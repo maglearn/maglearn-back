@@ -21,6 +21,8 @@ gevent = "*"
 bootstrap-flask = "*"
 petname = "*"
 flask-wtf = "*"
+flask-cors = "*"
+flask-restplus = "*"
 
 [requires]
 python_version = "3.7"

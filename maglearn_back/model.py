@@ -29,8 +29,7 @@ class Post(db.Model):
 
 
 class Dataset(db.Model):
-    name = db.Column(db.String, nullable=False,
-                     default=lambda: petname.generate(3))
+    name = db.Column(db.String, nullable=False)
     input_size = db.Column(db.Integer, nullable=False)
     output_size = db.Column(db.Integer, nullable=False)
     size = db.Column(db.Integer, nullable=False)
