@@ -14,7 +14,7 @@ def init_app(flask_app):
     log.info("Initializing RESTPlus.")
     bp = Blueprint('api', __name__, url_prefix="/api")
     api.init_app(bp)
-    endpoints = ["datasets"]
+    endpoints = ["datasets", "networks"]
     # must be loaded dynamically to avoid circular dependency
     for endpoint in endpoints:
         importlib.import_module("maglearn_back.api.endpoints." + endpoint)
